@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.js"></script>
+
+    <title>Sistema IoT para monitoreo de actividad cardiaca con variabilidad de frecuencia para el diagnóstico de enfermedades cardiovasculares</title>
+    <script type="text/javascript" src="..\site\papaparse\papaparse.min.js"></script>
+    <link rel="shortcut icon" href="https://upload.wikimedia.org/wikipedia/commons/d/d5/Universidad_Industrial_de_Santander_Logo.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <header>
+        <section class="textos-header">
+            <h1 class="TituloPrincipal">Sistema IoT para monitoreo de actividad cardiaca con variabilidad de frecuencia para el diagnóstico de enfermedades cardiovasculares</h1>
+            <input class="Boton" type="file" id="upload-csv" accept="CSV">
+            <button class="Boton" id="btn-upload-csv">Lectura Señal</button>
+        </section>
+
+
+        <div class="wave" style="height: 150px; overflow: hidden;"><svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%;"><path d="M0.00,49.81 C149.99,149.50 349.21,-49.81 500.01,49.81 L500.01,149.50 L0.00,149.50 Z" style="stroke: none; fill: rgb(255, 255, 255);"></path></svg></div>
+    </header>
+
+
+    <main>
+        <section class="Grafica">
+            <div class="contenedor-grafica">
+                <h2 class="titulo2"><span class="Numero">1</span> Segmento de la señal electrocardiografica original</h2>
+                <hr>
+                <canvas id="ECG" width="900" height="300"></canvas>
+            </div>
+        </section>
+        <section>
+            <div class="contenedor-diagnostico">
+                <h2 class="titulo2"><span class="Numero">2</span> Diagnostico</h2>
+                <script type="text/javascript" id="Conexionthingspeak">
+                    let btn_upload_2 = document.getElementById('btn-upload-csv').addEventListener('click', () => {
+                        const requestURL = 'https://api.thingspeak.com/channels/1383805/fields/1.json?api_key=LH0MSPZ0QHNEGI73&results=2';
+                        const request = new XMLHttpRequest();
+                        request.open('GET', requestURL);
+                        request.responseType = 'json';
+                        request.send();
+                        request.onload = function() {
+                            const DiagnosticoJSON = request.response;
+                            console.log(DiagnosticoJSON.feeds[1].field1)
+                            Diagnostico = DiagnosticoJSON.feeds[1].field1;
+                            Diagnostico = parseFloat(Diagnostico);
+                            console.log(Diagnostico)
+                            if (Diagnostico == 0) {
+                                document.getElementById("diagnóstico").value = 'Ritmo cardiaco Normal';
+                            } else if (Diagnostico == 1) {
+                                document.getElementById("diagnóstico").value = 'Taquicardia';
+                            } else {
+                                document.getElementById("diagnóstico").value = 'Bradicardia';
+                            }
+                        };
+                    })
+                </script>
+                <div class="Card-Diagnostico">
+                    <div>
+                        Diagnostico para el paciente: <input type="text" name="diagnostico" id="diagnóstico" enable=false>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+        <section class="Contenedor-Autores">
+            <h2 class="titulo2"><span class="Numero">3</span> Autores del proyecto</h2>
+            <div class="Autores">
+
+
+                <br>
+                <div class="cartas">
+                    <img src="Imagenes/Karen.jpg" alt="" class="Imagen-us">
+                    <div class="Contenido-texto-card">
+                        <h3 class="Nombre">Karen Dayana Martinez Siado</h3>
+                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minima distinctio, quasi molestiae tempore necessitatibus minus provident eum corporis error sint vero magni eveniet perspiciatis et beatae quae! Tenetur, numquam eum.</p>
+                    </div>
+                </div>
+
+                <br>
+                <div class="cartas">
+                    <img src="Imagenes/Carlos.jpg" alt="" class="Imagen-us">
+                    <div class="Contenido-texto-card">
+                        <h3 class="Nombre">Carlos Fabian Dovales Galvis</h3>
+                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minima distinctio, quasi molestiae tempore necessitatibus minus provident eum corporis error sint vero magni eveniet perspiciatis et beatae quae! Tenetur, numquam eum.</p>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+        </section>
+        <section class="Contenedor-Director">
+            <div class="Director">
+                <h2 class="titulo2"><span class="Numero">4</span> Director</h2>
+
+                <br>
+                <div class="cartas">
+                    <img src="Imagenes/Barrero.jpg" alt="" class="Imagen-us">
+                    <div class="Contenido-texto-card">
+                        <h3 class="Nombre">Jaime Guillermo Barrero</h3>
+                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minima distinctio, quasi molestiae tempore necessitatibus minus provident eum corporis error sint vero magni eveniet perspiciatis et beatae quae! Tenetur, numquam eum.</p>
+                    </div>
+                </div>
+
+                <br>
+            </div>
+
+        </section>
+    </main>
+
+
+    <script type="text/javascript">
+        var datosy = [];
+        var caracteristicas = [];
+        var Diagnostico;
+        let btn_upload = document.getElementById('btn-upload-csv').addEventListener('click', () => {
+            Papa.parse(document.getElementById('upload-csv').files[0], {
+                download: true,
+                header: false,
+                complete: function(results) {
+                    console.log('Datos adquiridos');
+                    for (i = 0; i <= results.data.length - 1; i++) {
+                        datosy[i] = parseFloat(results.data[i])
+                    }
+                    var ctx = document.getElementById("ECG").getContext("2d")
+                    var datosx = []
+                    for (var i = 0; i <= datosy.length - 1; i++) {
+                        datosx[i] = (i + 1) / 500;
+                    }
+
+                    var myChart = new Chart(ctx, {
+                        type: "line",
+                        data: {
+                            labels: datosx,
+                            datasets: [{
+                                label: 'Señal electrocardiografica',
+                                borderColor: 'blue',
+                                borderWidth: 2,
+                                fill: false,
+                                radius: 0.5,
+                                data: datosy,
+                            }]
+                        },
+
+                    })
+                }
+            })
+
+        })
+    </script>
+    <footer>
+        <div class="contenedor footer">
+            <div class="correos">
+                <h4>Correos electrónicos</h4>
+                <p>carlosdovales@gmail.com</p>
+                <p>correo karen</p>
+            </div>
+        </div>
+        <h2 class="Titulo-final">&copy; Carlos Dovales | Karen Martinez</h2>
+    </footer>
+</body>
+
+</html>
