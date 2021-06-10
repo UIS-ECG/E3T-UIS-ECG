@@ -141,3 +141,8 @@ header.textos-header {
     margin: auto;
     overflow: hidden;
 }
+
+.MostrarDiagnostico {
+    display: flex;
+    justify-content: center;
+}
