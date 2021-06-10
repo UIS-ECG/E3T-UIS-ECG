@@ -146,3 +146,7 @@ header.textos-header {
     display: flex;
     justify-content: center;
 }
+
+.Contenedor-Autores {
+    margin: auto;
+}
