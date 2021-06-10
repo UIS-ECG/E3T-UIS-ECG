@@ -143,10 +143,6 @@ header.textos-header {
 }
 
 .Card-Diagnostico {
-    display: flex;
+    align-items: center;
     justify-content: center;
-}
-
-.Contenedor-Autores {
-    margin: auto;
 }
