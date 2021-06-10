@@ -142,7 +142,7 @@ header.textos-header {
     overflow: hidden;
 }
 
-.MostrarDiagnostico {
+.Card-Diagnostico {
     display: flex;
     justify-content: center;
 }
