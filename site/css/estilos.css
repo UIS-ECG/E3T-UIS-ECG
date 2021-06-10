@@ -124,6 +124,8 @@ header.textos-header {
 
 .Nombre {
     padding: 0px 0px 30px 15px;
+    text-align: center;
+    font-size: 30px;
 }
 
 .contenedor-grafica {
@@ -146,3 +148,5 @@ header.textos-header {
     align-items: center;
     justify-content: center;
 }
+
+.cartas {}
